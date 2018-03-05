@@ -34,6 +34,11 @@ public class MainController {
     public String getMainPage(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
+        
+        user.getAuthorities().forEach((role) -> {
+            System.out.println(role.getAuthority());
+        });
+        
         model.addAttribute("username", user.getUsername());
         model.addAttribute("roles", user.getAuthorities().stream().map(Role::getAuthority).collect(joining(",")));
         return "index";
@@ -81,7 +86,7 @@ public class MainController {
 
         userService.saveUser(User.builder()
                 .username(request.getParameter("username"))
-                .authorities(ImmutableList.of(Role.ADMIN, Role.USER))
+                .authorities(ImmutableList.of(request.getParameter("role").equals("ADMIN")? Role.ADMIN : Role.USER))
                 .password(new BCryptPasswordEncoder().encode(request.getParameter("password")))
                 .name(request.getParameter("name"))
                 .email(request.getParameter("email"))
