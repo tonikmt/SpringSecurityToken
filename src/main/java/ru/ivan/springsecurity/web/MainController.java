@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.util.WebUtils;
 import ru.ivan.springsecurity.services.TokenHandler;
 import ru.ivan.springsecurity.services.UserService;
 
