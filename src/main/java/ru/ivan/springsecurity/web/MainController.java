@@ -74,6 +74,16 @@ public class MainController {
             return "login?error";
         }
     }
+    
+    @RequestMapping("/403")
+    public String accessDeniedPage (Model model, HttpServletRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("roles", user.getAuthorities().stream().map(Role::getAuthority).collect(joining(",")));
+        return "403";
+    }
 
     @RequestMapping("/addUser")
     public String addUser(HttpServletResponse response) {

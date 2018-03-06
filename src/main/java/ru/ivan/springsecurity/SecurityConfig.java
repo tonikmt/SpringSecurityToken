@@ -34,6 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/readme.txt", "/css/*", "/in").permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .exceptionHandling().accessDeniedPage("/403")
+                .and()
                 .formLogin().loginPage("/login").permitAll()
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll();
