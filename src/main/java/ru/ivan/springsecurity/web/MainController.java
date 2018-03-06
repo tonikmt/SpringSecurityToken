@@ -2,6 +2,8 @@ package ru.ivan.springsecurity.web;
 
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import ru.ivan.springsecurity.domain.Role;
 import ru.ivan.springsecurity.domain.User;
 import org.springframework.security.core.Authentication;
@@ -14,6 +16,7 @@ import static java.util.stream.Collectors.joining;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -96,7 +99,8 @@ public class MainController {
 
         userService.saveUser(User.builder()
                 .username(request.getParameter("username"))
-                .authorities(ImmutableList.of(request.getParameter("role").equals("ADMIN")? Role.ADMIN : Role.USER))
+                .authorities(ImmutableList.of(Role.valueOf(request.getParameter("role"))))
+                //.authorities(ImmutableList.of(request.getParameter("role").equals("ADMIN")? Role.ADMIN : Role.USER))
                 .password(new BCryptPasswordEncoder().encode(request.getParameter("password")))
                 .name(request.getParameter("name"))
                 .email(request.getParameter("email"))
@@ -106,5 +110,8 @@ public class MainController {
                 .enabled(true)
                 .build());
         return "addUser";
+    }
+    public List <Role> getRole (@NonNull String role) {
+        return ImmutableList.of(Role.valueOf(role));
     }
 }
