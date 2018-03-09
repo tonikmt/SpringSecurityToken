@@ -1,5 +1,6 @@
 package ru.ivan.springsecurity.domain;
 
+import com.google.common.collect.ImmutableList;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Data
 @Builder
@@ -31,7 +33,11 @@ public class User implements UserDetails {
     private String name;
     private String email;
 
-    public void setAuthorities(Role role) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setAuthorities(String role) {
+        this.authorities = ImmutableList.of(Role.valueOf((role)));
+    }
+    
+    public void setPassword (String password) {
+        this.password = new BCryptPasswordEncoder().encode(password);
     }
 }

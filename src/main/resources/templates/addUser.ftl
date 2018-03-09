@@ -32,7 +32,7 @@
                                     </div>
                                 <div class="form-group">
                                     <label for="role">Role select</label>
-                                    <select class="form-control" id="role" name="role">
+                                    <select class="form-control" id="authorities" name="authorities">
                                         <option>USER</option>
                                         <option>ADMIN</option>
                                         </select>
@@ -42,9 +42,27 @@
                                     <input type="text" class="form-control" id="name" placeholder="Name for user"
                                            name="name">
                                     </div>
+                                
                                 <div class="form-group">
                                     <label for="email">Email address</label>
                                     <input type="email" class="form-control" id="email" name="email" placeholder="name@domen.ru">
+                                    </div>
+                                
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="accountNonExpired" name="accountNonExpired">
+                                    <label class="form-check-label" for="exampleCheck1">Account Non Expired</label>
+                                    </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="accountNonLocked" name="accountNonLocked">
+                                    <label class="form-check-label" for="exampleCheck1">Account Non Locked</label>
+                                    </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="credentialsNonExpired" name="credentialsNonExpired">
+                                    <label class="form-check-label" for="exampleCheck1">Credentials Non Expired</label>
+                                    </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="enabled" name="enabled">
+                                    <label class="form-check-label" for="exampleCheck1">Enabled</label>
                                     </div>
                                 <button type="submit" class="btn btn-primary">add User</button>
                                 </form>

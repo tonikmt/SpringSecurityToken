@@ -20,6 +20,7 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import ru.ivan.springsecurity.services.TokenHandler;
 import ru.ivan.springsecurity.services.UserService;
 
@@ -94,10 +95,11 @@ public class MainController {
     }
 
     @RequestMapping("/addNewUser")
-    public String addNewUser(HttpServletRequest request, HttpServletResponse response,
+    public String addNewUser(@ModelAttribute User user, HttpServletRequest request, HttpServletResponse response,
             Model model) {
+        userService.saveUser(user);
 
-        userService.saveUser(User.builder()
+        /*userService.saveUser(User.builder()
                 .username(request.getParameter("username"))
                 .authorities(ImmutableList.of(Role.valueOf(request.getParameter("role"))))
                 //.authorities(ImmutableList.of(request.getParameter("role").equals("ADMIN")? Role.ADMIN : Role.USER))
@@ -108,7 +110,7 @@ public class MainController {
                 .accountNonLocked(true)
                 .credentialsNonExpired(true)
                 .enabled(true)
-                .build());
+                .build());*/
         return "addUser";
     }
     public List <Role> getRole (@NonNull String role) {
