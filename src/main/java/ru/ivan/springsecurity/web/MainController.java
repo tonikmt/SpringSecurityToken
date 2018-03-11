@@ -92,22 +92,23 @@ public class MainController {
     }
 
     @RequestMapping("/addUser")
-    public String addUser(HttpServletResponse response, Model model) {
-        model.addAttribute("errors", "false");
-        return "addUser";
-    }
-
-    @RequestMapping("/addNewUser")
     public String addNewUser(@Valid @ModelAttribute User user,// HttpServletRequest request, HttpServletResponse response,
-             BindingResult result, Model model) {
-         model.addAttribute("errors", "false");
+             BindingResult result, Model model, @RequestParam(value = "save", required = false) String save) {
+        if (save != null && user != null) {
+            userService.saveUser(user);
+            return "redirect:/Users";
+        }
+        if (save == null && result == null) {
+            model.addAttribute("errors", "false");
+            return "addUser";
+        }
         if (result.hasErrors()) {
             if (result.hasFieldErrors("username")) {
                 model.addAttribute("errors", "true");
             }
             return "addUser";
         }
-        userService.saveUser(user);
+        //userService.saveUser(user);
 
         /*userService.saveUser(User.builder()
                 .username(request.getParameter("username"))
@@ -121,7 +122,7 @@ public class MainController {
                 .credentialsNonExpired(true)
                 .enabled(true)
                 .build());*/
-        return "/";
+        return "addUser";
     }
     public List <Role> getRole (@NonNull String role) {
         return ImmutableList.of(Role.valueOf(role));

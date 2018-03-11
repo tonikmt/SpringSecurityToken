@@ -18,7 +18,7 @@
                             <h3 class="panel-title">Enter new user data</h3>
                             </div>
                         <div class="panel-body">
-                            <form method="post" action="/addNewUser">
+                            <form method="post" action="/addUser?save">
                                 <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">
 
                                     <#if errors == "true">
