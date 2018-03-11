@@ -98,16 +98,17 @@ public class MainController {
             userService.saveUser(user);
             return "redirect:/Users";
         }
-        if (save == null && result == null) {
-            model.addAttribute("errors", "false");
-            return "addUser";
-        }
-        if (result.hasErrors()) {
-            if (result.hasFieldErrors("username")) {
+        if (save != null && user == null && result.hasErrors()) {
+             if (result.hasFieldErrors("username")) {
                 model.addAttribute("errors", "true");
             }
             return "addUser";
         }
+        if (save == null && result == null) {
+            model.addAttribute("errors", "false");
+            return "addUser";
+        }
+       
         //userService.saveUser(user);
 
         /*userService.saveUser(User.builder()
