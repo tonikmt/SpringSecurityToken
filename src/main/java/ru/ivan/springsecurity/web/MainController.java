@@ -16,9 +16,11 @@ import static java.util.stream.Collectors.joining;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import ru.ivan.springsecurity.services.TokenHandler;
@@ -90,13 +92,21 @@ public class MainController {
     }
 
     @RequestMapping("/addUser")
-    public String addUser(HttpServletResponse response) {
+    public String addUser(HttpServletResponse response, Model model) {
+        model.addAttribute("errors", "false");
         return "addUser";
     }
 
     @RequestMapping("/addNewUser")
-    public String addNewUser(@ModelAttribute User user, HttpServletRequest request, HttpServletResponse response,
-            Model model) {
+    public String addNewUser(@Valid @ModelAttribute User user,// HttpServletRequest request, HttpServletResponse response,
+             BindingResult result, Model model) {
+         model.addAttribute("errors", "false");
+        if (result.hasErrors()) {
+            if (result.hasFieldErrors("username")) {
+                model.addAttribute("errors", "true");
+            }
+            return "addUser";
+        }
         userService.saveUser(user);
 
         /*userService.saveUser(User.builder()
@@ -111,7 +121,7 @@ public class MainController {
                 .credentialsNonExpired(true)
                 .enabled(true)
                 .build());*/
-        return "addUser";
+        return "/";
     }
     public List <Role> getRole (@NonNull String role) {
         return ImmutableList.of(Role.valueOf(role));
