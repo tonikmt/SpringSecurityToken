@@ -94,18 +94,17 @@ public class MainController {
     @RequestMapping("/addUser")
     public String addNewUser(@Valid @ModelAttribute User user,// HttpServletRequest request, HttpServletResponse response,
              BindingResult result, Model model, @RequestParam(value = "save", required = false) String save) {
-        if (save != null && user != null) {
+        
+        model.addAttribute("errors", "false");
+        
+        if (save != null && !result.hasErrors()) {
             userService.saveUser(user);
             return "redirect:/Users";
-        }
-        if (save != null && user == null && result.hasErrors()) {
+        } 
+        if (save != null && result.hasErrors()) {
              if (result.hasFieldErrors("username")) {
                 model.addAttribute("errors", "true");
             }
-            return "addUser";
-        }
-        if (save == null && result == null) {
-            model.addAttribute("errors", "false");
             return "addUser";
         }
        

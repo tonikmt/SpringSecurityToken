@@ -20,7 +20,6 @@
                         <div class="panel-body">
                             <form method="post" action="/addUser?save">
                                 <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">
-
                                     <#if errors == "true">
                                 <div class="form-group">
                                     <label for="username">Login</label>
@@ -30,23 +29,13 @@
                                         Please choose a username.
                                         </div>
                                     </div>  
-                                    <#elseif errors == "false">
+                                    <#else>
                                 <div class="form-group">
                                     <label for="username">Login</label>
                                     <input type="text" class="form-control" id="username" placeholder="Login" 
                                            name="username">
                                     </div>  
-                                <#else>
-                                <div class="form-group">
-                                    <label for="username">Login</label>
-                                    <input type="text" class="form-control is-valid" id="username" placeholder="Login" 
-                                           name="username">
-                                    <div class="valid-feedback">
-                                        UserName is OK!
-                                        </div>
-                                    </div>  
                                     </#if>
-
                                 <div class="form-group">
                                     <label for="password">Password</label>
                                     <input type="password" class="form-control" id="password" placeholder="Password"
