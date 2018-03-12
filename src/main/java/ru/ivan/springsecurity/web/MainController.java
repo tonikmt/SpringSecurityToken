@@ -92,8 +92,9 @@ public class MainController {
     }
 
     @RequestMapping("/addUser")
-    public String addNewUser(@Valid @ModelAttribute User user,// HttpServletRequest request, HttpServletResponse response,
-             BindingResult result, Model model, @RequestParam(value = "save", required = false) String save) {
+    public String addNewUser(@Valid @ModelAttribute User user,
+             BindingResult result, Model model, 
+             @RequestParam(value = "save", required = false) String save) {
         
         model.addAttribute("errors", "false");
         
