@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import ru.ivan.springsecurity.domain.Role;
 import ru.ivan.springsecurity.domain.User;
 import org.springframework.security.core.Authentication;
@@ -91,6 +92,12 @@ public class MainController {
         return "403";
     }
 
+    @RequestMapping("/Users")
+    public String allUsers (Model model) {
+        Optional <List<User>> users = userService.getAllUsers();
+        model.addAttribute("users", users.get());
+        return "Users";
+    }
     @RequestMapping("/addUser")
     public String addNewUser(@Valid @ModelAttribute User user,
              BindingResult result, Model model, 

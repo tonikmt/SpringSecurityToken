@@ -1,5 +1,7 @@
 package ru.ivan.springsecurity.persistence;
 
+import com.google.common.collect.ImmutableList;
+import java.util.List;
 import ru.ivan.springsecurity.domain.User;
 import ru.ivan.springsecurity.domain.UserField;
 import lombok.NonNull;
@@ -33,5 +35,8 @@ public class UserDao {
 
     public Optional<User> findById(@NonNull ObjectId id) {
         return Optional.ofNullable(mongoTemplate.findById(id, User.class));
+    }
+    public  Optional<List<User>> getAllUsers () {
+        return Optional.ofNullable(ImmutableList.copyOf(mongoTemplate.findAll(User.class)));
     }
 }
