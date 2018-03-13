@@ -69,9 +69,9 @@ public class MainController {
     public String in(HttpServletResponse response, HttpServletRequest request) {
         if (request.getParameter("username") != null && request.getParameter("password") != null) {
             if (new BCryptPasswordEncoder().matches(request.getParameter("password"), ((User) userService.loadUserByUsername(request.getParameter("username"))).getPassword())) {
-                Cookie cookie = new Cookie("X-Auth-Token", tokenHandler.generateAccessToken(((User) userService.loadUserByUsername(request.getParameter("username"))).getId(), LocalDateTime.now().plusMinutes(1)));
+                Cookie cookie = new Cookie("X-Auth-Token", tokenHandler.generateAccessToken(((User) userService.loadUserByUsername(request.getParameter("username"))).getId(), LocalDateTime.now().plusMinutes(5)));
                 cookie.setHttpOnly(true);
-                cookie.setMaxAge(120);
+                cookie.setMaxAge(300);
                 cookie.setPath("/");
                 cookie.setSecure(true);
                 response.addCookie(cookie);
