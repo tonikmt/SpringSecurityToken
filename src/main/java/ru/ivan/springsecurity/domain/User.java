@@ -33,9 +33,13 @@ public class User implements UserDetails {
     private List<Role> authorities;
     @NotBlank (message = "Поле password не заполненно!")
     private String password;
+    @NotNull
     private boolean accountNonExpired;
+    @NotNull
     private boolean accountNonLocked;
+    @NotNull
     private boolean credentialsNonExpired;
+    @NotNull
     private boolean enabled;
     @NotBlank (message = "Поле name не заполненно!")
     @Size (min = 1, max = 32, message = "Имя должно быть от 1 до 32 символов!")

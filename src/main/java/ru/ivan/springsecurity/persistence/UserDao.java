@@ -39,4 +39,8 @@ public class UserDao {
     public  Optional<List<User>> getAllUsers () {
         return Optional.ofNullable(ImmutableList.copyOf(mongoTemplate.findAll(User.class)));
     }
+    
+    public void deletUser (String username) {
+        mongoTemplate.remove(findByUsername(username).get());
+    }
 }

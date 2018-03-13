@@ -24,8 +24,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.ResponseBody;
 import ru.ivan.springsecurity.services.TokenHandler;
 import ru.ivan.springsecurity.services.UserService;
+
 
 @CrossOrigin
 @Controller
@@ -91,7 +93,16 @@ public class MainController {
         model.addAttribute("roles", user.getAuthorities().stream().map(Role::getAuthority).collect(joining(",")));
         return "403";
     }
-
+    @ResponseBody
+    @RequestMapping("/deleteUser")
+    public String deleteUser (@RequestParam(value = "username", required = false) String username) {
+        if (username != null && !"".equals(username)) {
+            userService.deleteUser(username);
+            return "true";
+        }
+        return "false";
+    }
+    
     @RequestMapping("/Users")
     public String allUsers (Model model) {
         Optional <List<User>> users = userService.getAllUsers();
