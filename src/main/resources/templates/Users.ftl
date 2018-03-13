@@ -82,7 +82,7 @@
                             <#else>
                             <td>No</td>
                             </#if>
-                            <td><input type="button" onclick="deletUser('${user.getUsername()}', ${x})" id="button" value="Delet"/></td>
+                            <td><button type="button" class="btn btn-danger" onclick="deletUser('${user.getUsername()}', ${x})" id="button"/>Delet</button></td>
                             </tr>
                         <#assign x=x+1>
                     </#list>
