@@ -23,6 +23,9 @@ public class UserService implements UserDetailsService {
         return userDao.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("user " + username + " was not found!"));
     }
+    public Optional<User> findUser (String username) {
+        return userDao.findByUsername(username);
+    }
 
     public Optional<User> findById(@NonNull ObjectId id) {
         return userDao.findById(id);

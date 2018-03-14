@@ -24,6 +24,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @AllArgsConstructor
 @Document(collection = "users")
 public class User implements UserDetails {
+
+    private static final long serialVersionUID = -6319038172906820788L;
     @Id
     private ObjectId id;
     
