@@ -44,9 +44,9 @@ public class MainController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         
-        user.getAuthorities().forEach((role) -> {
-            System.out.println(role.getAuthority());
-        });
+        //user.getAuthorities().forEach((role) -> {
+        //    System.out.println(role.getAuthority());
+       // });
         
         model.addAttribute("username", user.getUsername());
         model.addAttribute("roles", user.getAuthorities().stream().map(Role::getAuthority).collect(joining(",")));
@@ -114,16 +114,45 @@ public class MainController {
              BindingResult result, Model model, 
              @RequestParam(value = "save", required = false) String save) {
         
-        model.addAttribute("errors", "false");
-        
+        model.addAttribute("username", "false");
+        model.addAttribute("password", "false");
+        model.addAttribute("name", "false");
+        model.addAttribute("email", "false");
+        System.out.println("addUser");
         if (save != null && !result.hasErrors()) {
-            userService.saveUser(user);
-            return "redirect:/Users";
+            System.out.println("save != null && !result.hasErrors()");
+            if (userService.loadUserByUsername(user.getUsername())==null) {
+                System.out.println("userService.loadUserByUsername(user.getUsername())==null");
+                userService.saveUser(user);
+                return "redirect:/Users";
+            } else {
+                System.out.println("userService.loadUserByUsername(user.getUsername())==null) --- else");
+                model.addAttribute("usernameMess","Login занят другим пользователем!");
+                model.addAttribute("username", "true");
+                return "addUser";
+            }
+            
         } 
         if (save != null && result.hasErrors()) {
+            System.out.println("save != null && result.hasErrors()");
+            System.out.println(user.toString());
              if (result.hasFieldErrors("username")) {
-                model.addAttribute("errors", "true");
+                 model.addAttribute("usernameMess",result.getFieldError("username").getDefaultMessage());
+                 model.addAttribute("username", "true");
             }
+             if (result.hasFieldErrors("password")) {
+                 model.addAttribute("passwordMess",result.getFieldError("password").getDefaultMessage());
+                 model.addAttribute("password", "true");
+            }
+             if (result.hasFieldErrors("name")) {
+                 model.addAttribute("nameMess",result.getFieldError("name").getDefaultMessage());
+                 model.addAttribute("name", "true");
+            }
+             if (result.hasFieldErrors("email")) {
+                 model.addAttribute("emailMess",result.getFieldError("email").getDefaultMessage());
+                 model.addAttribute("email", "true");
+            }
+             
             return "addUser";
         }
        
@@ -141,6 +170,7 @@ public class MainController {
                 .credentialsNonExpired(true)
                 .enabled(true)
                 .build());*/
+        System.out.println("addUser - out");
         return "addUser";
     }
     public List <Role> getRole (@NonNull String role) {

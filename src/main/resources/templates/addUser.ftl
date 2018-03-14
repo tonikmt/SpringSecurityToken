@@ -36,26 +36,21 @@
                         <div class="panel-body">
                             <form method="post" action="/addUser?save">
                                 <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">
-                                    <#if errors == "true">
-                                <div class="form-group">
-                                    <label for="username">Login</label>
-                                    <input type="text" class="form-control is-invalid" id="username" placeholder="Login" 
-                                           name="username">
-                                    <div class="invalid-feedback">
-                                        Please choose a username.
-                                        </div>
-                                    </div>  
-                                    <#else>
                                 <div class="form-group">
                                     <label for="username">Login</label>
                                     <input type="text" class="form-control" id="username" placeholder="Login" 
                                            name="username">
-                                    </div>  
+                                    <#if username == "true">
+                                    <span class="label label-danger">${usernameMess}</span>
                                     </#if>
+                                    </div>
                                 <div class="form-group">
                                     <label for="password">Password</label>
                                     <input type="password" class="form-control" id="password" placeholder="Password"
                                            name="password">
+                                    <#if password == "true">
+                                    <span class="label label-danger">${passwordMess}</span>
+                                    </#if>
                                     </div>
                                 <div class="form-group">
                                     <label for="role">Role select</label>
@@ -68,26 +63,30 @@
                                     <label for="name">Name user</label>
                                     <input type="text" class="form-control" id="name" placeholder="Name for user"
                                            name="name">
-                                    </div>
-
+                                    <#if name == "true">
+                                    <span class="label label-danger">${nameMess}</span>
+                                    </#if>
+                                    </div> 
                                 <div class="form-group">
                                     <label for="email">Email address</label>
                                     <input type="email" class="form-control" id="email" name="email" placeholder="name@domen.ru">
+                                    <#if email == "true">
+                                    <span class="label label-danger">${emailMess}</span>
+                                    </#if>
                                     </div>
-
-                                <div class="form-check">
+                                <div class="form-group">
                                     <input type="checkbox" class="form-check-input" id="accountNonExpired" name="accountNonExpired">
                                     <label class="form-check-label" for="exampleCheck1">Account Non Expired</label>
                                     </div>
-                                <div class="form-check">
+                                <div class="form-group">
                                     <input type="checkbox" class="form-check-input" id="accountNonLocked" name="accountNonLocked">
                                     <label class="form-check-label" for="exampleCheck1">Account Non Locked</label>
                                     </div>
-                                <div class="form-check">
+                                <div class="form-group">
                                     <input type="checkbox" class="form-check-input" id="credentialsNonExpired" name="credentialsNonExpired">
                                     <label class="form-check-label" for="exampleCheck1">Credentials Non Expired</label>
                                     </div>
-                                <div class="form-check">
+                                <div class="form-group">
                                     <input type="checkbox" class="form-check-input" id="enabled" name="enabled">
                                     <label class="form-check-label" for="exampleCheck1">Enabled</label>
                                     </div>
