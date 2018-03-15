@@ -29,8 +29,14 @@
         <div class="container" style="margin-top:100px">
             <div class="row">
                 <div class="col-md-12">
-                    <h1 class="page-header">Error</h1>
-                    <h2>${error}</h2>
+                    <#if isError == "true">
+                    <div class="alert alert-danger" role="alert">
+                        <h1 class="alert-heading">Access is denied!</h4>
+                        <#list errors as error>
+                        <h3>#Reason: ${error}</h3>
+                        </#list>
+                        </div>
+                    </#if>
                     </div>
                 </div>
             </div>

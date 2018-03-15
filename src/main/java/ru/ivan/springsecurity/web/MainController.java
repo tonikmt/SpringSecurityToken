@@ -3,7 +3,9 @@ package ru.ivan.springsecurity.web;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import ru.ivan.springsecurity.domain.Role;
 import ru.ivan.springsecurity.domain.User;
@@ -67,11 +69,29 @@ public class MainController {
     @RequestMapping("/in")
     public String in(HttpServletResponse response, HttpServletRequest request, Model model) {
         User user = (User) userService.loadUserByUsername(request.getParameter("username"));
-        if (user!=null && !user.isEnabled()) {
-            model.addAttribute("error", "Учетная запись отключена!");
-            return "pageError";
+      
+        List<String> error = new ArrayList();
+        model.addAttribute("isError", "false");
+        if (user != null) {
+            if (!user.isEnabled()) {
+                error.add("Учетная запись отключена!");
+            }
+            if (!user.isAccountNonExpired()) {
+                error.add("Истек срок действия аккаунта!");
+            }
+            if (!user.isAccountNonLocked()) {
+                error.add("Аккаунт заблокированн!");
+            }
+            if (!user.isCredentialsNonExpired()) {
+                error.add("Срок действия учетных данных истек!");
+            }
+            if (error.size()>0) {
+                model.addAttribute("isError", "true");
+                model.addAttribute("errors", error);
+                return "pageError";
+            }
         }
-        if (request.getParameter("username") != null && request.getParameter("password") != null && user !=null) {
+        if (request.getParameter("username") != null && request.getParameter("password") != null && user != null) {
             if (new BCryptPasswordEncoder().matches(request.getParameter("password"), user.getPassword())) {
                 Cookie cookie = new Cookie("X-Auth-Token", tokenHandler.generateAccessToken(((User) userService.loadUserByUsername(request.getParameter("username"))).getId(), LocalDateTime.now().plusMinutes(5)));
                 cookie.setHttpOnly(true);
@@ -97,7 +117,7 @@ public class MainController {
         model.addAttribute("roles", user.getAuthorities().stream().map(Role::getAuthority).collect(joining(",")));
         return "403";
     }
-   
+
     @ResponseBody
     @RequestMapping("/deleteUser")
     public String deleteUser(@RequestParam(value = "username", required = false) String username) {
