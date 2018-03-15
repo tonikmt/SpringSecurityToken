@@ -8,8 +8,10 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
+import org.springframework.security.authentication.AuthenticationServiceException;
 
 import org.springframework.web.util.WebUtils;
+import ru.ivan.springsecurity.domain.User;
 
 @Component
 public class TokenAuthService {
@@ -22,11 +24,10 @@ public class TokenAuthService {
     private UserService userService;
 
     public Optional<Authentication> getAuthentication(@NonNull HttpServletRequest request) {
-        
         return Optional
-                .ofNullable((WebUtils.getCookie(request, AUTH_HEADER_NAME))!= null ? (WebUtils.getCookie(request, AUTH_HEADER_NAME)).getValue():null)
-                .flatMap(tokenHandler::extractUserId)
-                .flatMap(userService::findById)
-                .map(UserAuthentication::new);
+            .ofNullable((WebUtils.getCookie(request, AUTH_HEADER_NAME))!= null ? (WebUtils.getCookie(request, AUTH_HEADER_NAME)).getValue():null)
+            .flatMap(tokenHandler::extractUserId)
+            .flatMap(userService::findById)
+            .map(UserAuthentication::new);
     }
 }

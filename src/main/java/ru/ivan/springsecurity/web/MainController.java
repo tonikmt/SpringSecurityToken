@@ -56,18 +56,23 @@ public class MainController {
             @RequestParam(value = "error", required = false) String error,
             @RequestParam(value = "logout", required = false) String logout,
             Model model) {
-        if (logout != null) {
-            response.addCookie(new Cookie("X-Auth-Token", ""));
-        }
+        //if (logout != null) {
+        //    response.addCookie(new Cookie("X-Auth-Token", ""));
+        //}
         model.addAttribute("error", error != null);
         model.addAttribute("logout", logout != null);
         return "login";
     }
 
     @RequestMapping("/in")
-    public String in(HttpServletResponse response, HttpServletRequest request) {
-        if (request.getParameter("username") != null && request.getParameter("password") != null) {
-            if (new BCryptPasswordEncoder().matches(request.getParameter("password"), ((User) userService.loadUserByUsername(request.getParameter("username"))).getPassword())) {
+    public String in(HttpServletResponse response, HttpServletRequest request, Model model) {
+        User user = (User) userService.loadUserByUsername(request.getParameter("username"));
+        if (user!=null && !user.isEnabled()) {
+            model.addAttribute("error", "Учетная запись отключена!");
+            return "pageError";
+        }
+        if (request.getParameter("username") != null && request.getParameter("password") != null && user !=null) {
+            if (new BCryptPasswordEncoder().matches(request.getParameter("password"), user.getPassword())) {
                 Cookie cookie = new Cookie("X-Auth-Token", tokenHandler.generateAccessToken(((User) userService.loadUserByUsername(request.getParameter("username"))).getId(), LocalDateTime.now().plusMinutes(5)));
                 cookie.setHttpOnly(true);
                 cookie.setMaxAge(300);
@@ -92,7 +97,7 @@ public class MainController {
         model.addAttribute("roles", user.getAuthorities().stream().map(Role::getAuthority).collect(joining(",")));
         return "403";
     }
-
+   
     @ResponseBody
     @RequestMapping("/deleteUser")
     public String deleteUser(@RequestParam(value = "username", required = false) String username) {

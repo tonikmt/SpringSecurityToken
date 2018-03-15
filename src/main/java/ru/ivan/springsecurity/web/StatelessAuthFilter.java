@@ -24,5 +24,5 @@ public class StatelessAuthFilter extends GenericFilterBean {
         SecurityContextHolder.getContext().setAuthentication(
                 tokenAuthService.getAuthentication((HttpServletRequest) servletRequest).orElse(null));
         filterChain.doFilter(servletRequest, servletResponse);
+        }
     }
-}
