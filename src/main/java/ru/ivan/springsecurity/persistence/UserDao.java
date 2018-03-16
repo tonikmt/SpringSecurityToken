@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
+import org.springframework.data.mongodb.core.query.Update;
 
 @Component
 public class UserDao {
@@ -41,6 +42,6 @@ public class UserDao {
     }
     
     public void deletUser (String username) {
-        mongoTemplate.remove(findByUsername(username).get());
+        mongoTemplate.findAndRemove(query (where(UserField.USER_NAME.field()).is(username)), User.class);
     }
 }
