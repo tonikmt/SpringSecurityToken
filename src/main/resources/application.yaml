@@ -6,8 +6,10 @@ server:
       keyStoreType: PKCS12
       keyAlias: tomcat
       
-
 spring:
   data:
     mongodb:
       database: users
+
+
+  

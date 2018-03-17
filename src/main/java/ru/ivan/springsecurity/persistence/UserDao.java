@@ -1,6 +1,7 @@
 package ru.ivan.springsecurity.persistence;
 
 import com.google.common.collect.ImmutableList;
+import com.mongodb.DBObject;
 import java.util.List;
 import ru.ivan.springsecurity.domain.User;
 import ru.ivan.springsecurity.domain.UserField;
@@ -43,5 +44,9 @@ public class UserDao {
     
     public void deletUser (String username) {
         mongoTemplate.findAndRemove(query (where(UserField.USER_NAME.field()).is(username)), User.class);
+    }
+    public void updateUser (@NonNull User user) {
+        Update update = Update.fromDBObject((DBObject) user, (String) null);
+        mongoTemplate.updateFirst(query (where(UserField.USER_NAME.field()).is(user.getUsername())), update, User.class);
     }
 }

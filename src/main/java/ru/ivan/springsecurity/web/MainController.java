@@ -3,9 +3,7 @@ package ru.ivan.springsecurity.web;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import ru.ivan.springsecurity.domain.Role;
 import ru.ivan.springsecurity.domain.User;
@@ -21,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
@@ -33,7 +33,9 @@ import ru.ivan.springsecurity.services.UserService;
 @CrossOrigin
 @Controller
 public class MainController {
-
+   
+    private final Logger logger = LoggerFactory.getLogger(MainController.class);
+    
     @Autowired
     UserService userService;
 
@@ -69,7 +71,6 @@ public class MainController {
     @RequestMapping("/in")
     public String in(HttpServletResponse response, HttpServletRequest request, Model model) {
         User user = (User) userService.loadUserByUsername(request.getParameter("username"));
-      
         List<String> error = new ArrayList();
         model.addAttribute("isError", "false");
         if (user != null) {
