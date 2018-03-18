@@ -11,33 +11,8 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="\js\main.js"></script>
         </head>
-
-    <script>
-    
-    function deletUser(user, x) {
-        var data = "username="+user+"&"+"${_csrf.parameterName}"+"="+"${_csrf.token}";
-      $.ajax({
-      type: "POST",
-      url: "/deleteUser",
-      data: data,
-      success: function(msg){
-          if (msg == "true") {
-               $("#tr"+x).remove();
-              } else {
-                    alert('Error!!!');
-                }
-        },
-        error: function (request, status, error) {
-            //alert(request.responseText);
-            //    alert(request.status);
-            document.open();
-            document.write(request.responseText);
-            document.close();
-        }
-    });
-    }
-        </script>
     <body>
         <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
@@ -69,7 +44,7 @@
                             <th scope="col">Credentials Non Expired</th>
                             <th scope="col">Enabled</th>
                             <th scope="col">Delete</th>
-
+                            <th scope="col">Edit</th>
                             </tr>
                         </thead>
                     <tbody>
@@ -105,14 +80,15 @@
                             <#else>
                             <td>No</td>
                             </#if>
-                            <td><button type="button" class="btn btn-danger" onclick="deletUser('${user.getUsername()}', ${x})" id="button"/>Delet</button></td>
+                            <td><button type="button" class="btn btn-danger" onclick="deletUser('${user.getUsername()}', ${x}, '${_csrf.parameterName}', '${_csrf.token}')" id="button"/>Del</button></td>
+                            <td><button type="button" class="btn btn-primary" onclick="editUser('${user.getUsername()}', ${x})" id="button"/>Edit</button></td>
                             </tr>
                         <#assign x=x+1>
                     </#list>
-
                         </tbody>
                     </table>
                 </div>
             </div>
+        
         </body>
     </html>

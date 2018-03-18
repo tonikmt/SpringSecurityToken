@@ -42,11 +42,11 @@ public class UserDao {
         return Optional.ofNullable(ImmutableList.copyOf(mongoTemplate.findAll(User.class)));
     }
     
-    public void deletUser (String username) {
-        mongoTemplate.findAndRemove(query (where(UserField.USER_NAME.field()).is(username)), User.class);
+    public User deletUser (String username) {
+        return (User) mongoTemplate.findAndRemove(query (where(UserField.USER_NAME.field()).is(username)), User.class);
     }
-    public void updateUser (@NonNull User user) {
-        Update update = Update.fromDBObject((DBObject) user, (String) null);
-        mongoTemplate.updateFirst(query (where(UserField.USER_NAME.field()).is(user.getUsername())), update, User.class);
-    }
+    //public void updateUser (@NonNull User user) {
+    //    Update update = Update.fromDBObject((DBObject) user, (String) null);
+    //    mongoTemplate.updateFirst(query (where(UserField.USER_NAME.field()).is(user.getUsername())), update, User.class);
+   // }
 }

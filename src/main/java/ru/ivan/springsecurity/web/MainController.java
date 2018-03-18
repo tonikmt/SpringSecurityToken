@@ -33,9 +33,9 @@ import ru.ivan.springsecurity.services.UserService;
 @CrossOrigin
 @Controller
 public class MainController {
-   
+
     private final Logger logger = LoggerFactory.getLogger(MainController.class);
-    
+
     @Autowired
     UserService userService;
 
@@ -73,6 +73,7 @@ public class MainController {
         User user = (User) userService.loadUserByUsername(request.getParameter("username"));
         List<String> error = new ArrayList();
         model.addAttribute("isError", "false");
+        model.addAttribute("heder", "Access is denied!");
         if (user != null) {
             if (!user.isEnabled()) {
                 error.add("Учетная запись отключена!");
@@ -86,7 +87,7 @@ public class MainController {
             if (!user.isCredentialsNonExpired()) {
                 error.add("Срок действия учетных данных истек!");
             }
-            if (error.size()>0) {
+            if (error.size() > 0) {
                 model.addAttribute("isError", "true");
                 model.addAttribute("errors", error);
                 return "pageError";
@@ -123,8 +124,12 @@ public class MainController {
     @RequestMapping("/deleteUser")
     public String deleteUser(@RequestParam(value = "username", required = false) String username) {
         if (username != null && !"".equals(username)) {
-            userService.deleteUser(username);
-            return "true";
+            User user = userService.deleteUser(username);
+            if (user != null) {
+                logger.debug(user.toString());
+                return "true";
+            } else
+                return "false";
         }
         return "false";
     }

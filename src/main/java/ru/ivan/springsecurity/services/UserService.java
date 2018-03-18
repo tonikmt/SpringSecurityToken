@@ -36,7 +36,7 @@ public class UserService implements UserDetailsService {
     public Optional<List<User>> getAllUsers () {
         return userDao.getAllUsers();
     }
-    public void deleteUser (String username) {
-        userDao.deletUser(username);
+    public User deleteUser (String username) {
+        return (User) userDao.deletUser(username);
     }
 }

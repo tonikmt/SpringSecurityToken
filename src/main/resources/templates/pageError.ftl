@@ -31,7 +31,7 @@
                 <div class="col-md-12">
                     <#if isError == "true">
                     <div class="alert alert-danger" role="alert">
-                        <h1 class="alert-heading">Access is denied!</h4>
+                        <h1 class="alert-heading">${heder}</h4>
                         <#list errors as error>
                         <h3>#Reason: ${error}</h3>
                         </#list>
