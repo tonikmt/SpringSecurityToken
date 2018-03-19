@@ -120,18 +120,28 @@ public class MainController {
         return "403";
     }
 
-    @ResponseBody
     @RequestMapping("/deleteUser")
-    public String deleteUser(@RequestParam(value = "username", required = false) String username) {
+    public String deleteUser(@RequestParam(value = "username", required = false) String username, Model model) {
         if (username != null && !"".equals(username)) {
             User user = userService.deleteUser(username);
             if (user != null) {
                 logger.debug(user.toString());
-                return "true";
-            } else
-                return "false";
+                return "redirect:/Users";
+            } else {
+                List<String> error = new ArrayList();
+                error.add("Пользователь не найден!");
+                model.addAttribute("heder", "Ошибка удаления пользователя!");
+                model.addAttribute("isError", "true");
+                model.addAttribute("errors", error);
+                return "pageError";
+            }
         }
-        return "false";
+        List<String> error = new ArrayList();
+        error.add("Пользователь не найден!");
+        model.addAttribute("heder", "Ошибка удаления пользователя!");
+        model.addAttribute("isError", "true");
+        model.addAttribute("errors", error);
+        return "pageError";
     }
 
     @RequestMapping("/Users")

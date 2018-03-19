@@ -80,8 +80,8 @@
                             <#else>
                             <td>No</td>
                             </#if>
-                            <td><button type="button" class="btn btn-danger" onclick="deletUser('${user.getUsername()}', ${x}, '${_csrf.parameterName}', '${_csrf.token}')" id="button"/>Del</button></td>
-                            <td><button type="button" class="btn btn-primary" onclick="editUser('${user.getUsername()}', ${x})" id="button"/>Edit</button></td>
+                            <td><button type="button" class="btn btn-danger" onclick="deletUser('${user.getUsername()}', '${_csrf.parameterName}', '${_csrf.token}')" id="buttonDel"/>Del</button></td>
+                            <td><button type="button" class="btn btn-primary" onclick="editUser('${user.getUsername()}', '${_csrf.parameterName}', '${_csrf.token}')" id="buttonEdit"/>Edit</button></td>
                             </tr>
                         <#assign x=x+1>
                     </#list>
