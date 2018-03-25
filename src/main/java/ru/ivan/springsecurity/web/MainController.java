@@ -39,8 +39,7 @@ public class MainController {
 
     @Autowired
     UserService userService;
-    
-  
+
     @Autowired
     private TokenHandler tokenHandler;
 
@@ -220,8 +219,7 @@ public class MainController {
             Optional<User> userDB = userService.findUser(edit);
             if (userDB.isPresent()) {
                 User u = userDB.get();
-                UserToMap mapUpU = new UserToMap(u, user);
-                Map<String, Object> userMap = mapUpU.getMapUser();
+                Map<String, Object> userMap = UserToMap.getMapUser(u, user);
                 if (userService.updateUser(edit, userMap)) {
                     return "redirect:/Users";
                 } else {
@@ -240,16 +238,18 @@ public class MainController {
                 model.addAttribute("errors", error);
                 return "pageError";
             }
-        } 
+        }
 
         if (save != null && !result.hasErrors()) {
-            if (!userService.findUser(user.getUsername()).isPresent()) {
-                userService.saveUser(user);
-                return "redirect:/Users";
-            } else {
-                model.addAttribute("usernameMess", "Login занят другим пользователем!");
-                model.addAttribute("username", "true");
-                return "addUser";
+            if (user != null) {
+                if (userService.findUser(user.getUsername()).isPresent()) {
+                    model.addAttribute("usernameMess", "Login занят другим пользователем!");
+                    model.addAttribute("username", "true");
+                    return "addUser";
+                } else {
+                    userService.saveUser(user);
+                    return "redirect:/Users";
+                }
             }
         }
         if (save != null && result.hasErrors()) {
