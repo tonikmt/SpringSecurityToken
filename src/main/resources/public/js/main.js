@@ -23,9 +23,9 @@ function deletUser(user, csrfParameterName, csrfToken) {
 }
 function editUser(user, csrfParameterName, csrfToken) {
     var data = "username=" + user + "&" + csrfParameterName + "=" + csrfToken;
-    $.ajax({
+     $.ajax({
         type: "POST",
-        url: "/deleteUser",
+        url: "/editUser",
         data: data,
         success: function (msg) {
            // if (msg == "") {

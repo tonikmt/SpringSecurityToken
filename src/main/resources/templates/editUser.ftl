@@ -34,60 +34,72 @@
                             <h3 class="panel-title">Enter new user data</h3>
                             </div>
                         <div class="panel-body">
-                            <form method="post" action="/addUser?save">
+                            <form method="post" action="/addUser?edit=${userDB}">
                                 <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">
                                 <div class="form-group">
                                     <label for="username">Login</label>
                                     <input type="text" class="form-control" id="username" placeholder="Login" 
-                                           name="username">
-                                    <#if username == "true">
-                                    <span class="label label-danger">${usernameMess}</span>
-                                    </#if>
+                                           name="username" value = "${u}">
                                     </div>
                                 <div class="form-group">
                                     <label for="password">Password</label>
                                     <input type="password" class="form-control" id="password" placeholder="Password"
-                                           name="password">
-                                    <#if password == "true">
-                                    <span class="label label-danger">${passwordMess}</span>
-                                    </#if>
+                                           name="password" value = "${p}">
                                     </div>
                                 <div class="form-group">
                                     <label for="role">Role select</label>
                                     <select class="form-control" id="authorities" name="authorities">
-                                        <option>USER</option>
-                                        <option>ADMIN</option>
-                                    </select>
+                                            <#if roleU=="true">
+                                            <option selected>USER</option>
+                                            <option>ADMIN</option>
+                                            <#elseif roleA=="true">
+                                            <option>USER</option>
+                                            <option selected>ADMIN</option>
+                                            <#else>
+                                            <option>USER</option>
+                                            <option>ADMIN</option>
+                                            </#if>
+                                        </select>
                                     </div>
                                 <div class="form-group">
                                     <label for="name">Name user</label>
                                     <input type="text" class="form-control" id="name" placeholder="Name for user"
-                                           name="name">
-                                    <#if name == "true">
-                                    <span class="label label-danger">${nameMess}</span>
-                                    </#if>
+                                           name="name" value = "${n}">
                                     </div> 
                                 <div class="form-group">
                                     <label for="email">Email address</label>
-                                    <input type="email" class="form-control" id="email" name="email" placeholder="name@domen.ru">
-                                    <#if email == "true">
-                                    <span class="label label-danger">${emailMess}</span>
-                                    </#if>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="name@domen.ru" value = "${e}">
                                     </div>
                                 <div class="form-group">
+                                    <#if accountNonExpired == "true">
+                                    <input type="checkbox" class="form-check-input" id="accountNonExpired" name="accountNonExpired" checked>
+                                    <#else>
                                     <input type="checkbox" class="form-check-input" id="accountNonExpired" name="accountNonExpired">
+                                    </#if>
                                     <label class="form-check-label" for="exampleCheck1">Account Non Expired</label>
                                     </div>
                                 <div class="form-group">
+                                    <#if accountNonLocked == "true">
+                                    <input type="checkbox" class="form-check-input" id="accountNonLocked" name="accountNonLocked" checked>
+                                    <#else>
                                     <input type="checkbox" class="form-check-input" id="accountNonLocked" name="accountNonLocked">
+                                    </#if>
                                     <label class="form-check-label" for="exampleCheck1">Account Non Locked</label>
                                     </div>
                                 <div class="form-group">
+                                    <#if credentialsNonExpired == "true">
+                                    <input type="checkbox" class="form-check-input" id="credentialsNonExpired" name="credentialsNonExpired" checked>
+                                    <#else>
                                     <input type="checkbox" class="form-check-input" id="credentialsNonExpired" name="credentialsNonExpired">
+                                    </#if>
                                     <label class="form-check-label" for="exampleCheck1">Credentials Non Expired</label>
                                     </div>
                                 <div class="form-group">
+                                    <#if enabled == "true">
+                                    <input type="checkbox" class="form-check-input" id="enabled" name="enabled" checked>
+                                    <#else>
                                     <input type="checkbox" class="form-check-input" id="enabled" name="enabled">
+                                    </#if>
                                     <label class="form-check-label" for="exampleCheck1">Enabled</label>
                                     </div>
                                 <button type="submit" class="btn btn-primary">add User</button>

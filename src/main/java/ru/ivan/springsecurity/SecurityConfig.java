@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .addFilterBefore(new StatelessAuthFilter(tokenAuthService), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/addUser/**", "/deleteUser/**").hasAuthority("ADMIN")
+                .antMatchers("/addUser/**", "/deleteUser/**", "/editUser/**").hasAuthority("ADMIN")
                 .antMatchers("/readme.txt", "/css/*", "/in", "/js/*").permitAll()
                 .anyRequest().authenticated()
                 .and()

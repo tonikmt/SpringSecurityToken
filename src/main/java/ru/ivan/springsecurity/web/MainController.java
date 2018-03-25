@@ -1,9 +1,11 @@
 package ru.ivan.springsecurity.web;
 
+import ru.ivan.springsecurity.utils.UserToMap;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import ru.ivan.springsecurity.domain.Role;
 import ru.ivan.springsecurity.domain.User;
@@ -26,7 +28,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.ResponseBody;
 import ru.ivan.springsecurity.services.TokenHandler;
 import ru.ivan.springsecurity.services.UserService;
 
@@ -38,7 +39,8 @@ public class MainController {
 
     @Autowired
     UserService userService;
-
+    
+  
     @Autowired
     private TokenHandler tokenHandler;
 
@@ -125,7 +127,6 @@ public class MainController {
         if (username != null && !"".equals(username)) {
             User user = userService.deleteUser(username);
             if (user != null) {
-                logger.debug(user.toString());
                 return "redirect:/Users";
             } else {
                 List<String> error = new ArrayList();
@@ -151,15 +152,96 @@ public class MainController {
         return "Users";
     }
 
-    @RequestMapping("/addUser")
-    public String addNewUser(@Valid @ModelAttribute User user,
-            BindingResult result, Model model,
-            @RequestParam(value = "save", required = false) String save) {
+    @RequestMapping("/editUser")
+    public String editUser(@RequestParam(value = "username", required = false) String username, Model model) {
 
         model.addAttribute("username", "false");
         model.addAttribute("password", "false");
         model.addAttribute("name", "false");
         model.addAttribute("email", "false");
+
+        model.addAttribute("enabled", "false");
+        model.addAttribute("credentialsNonExpired", "false");
+        model.addAttribute("accountNonLocked", "false");
+        model.addAttribute("accountNonExpired", "false");
+
+        model.addAttribute("u", "");
+        model.addAttribute("p", "");
+        model.addAttribute("n", "");
+        model.addAttribute("e", "");
+        model.addAttribute("roleU", "false");
+        model.addAttribute("roleA", "false");
+        model.addAttribute("userDB", "");
+
+        if (username != null && username != "") {
+            model.addAttribute("userDB", username);
+            Optional<User> user = userService.findUser(username);
+            if (user.isPresent()) {
+                User u = user.get();
+                model.addAttribute("u", u.getUsername());
+                model.addAttribute("p", "");
+                model.addAttribute("n", u.getName());
+                model.addAttribute("e", u.getEmail());
+                if (u.getAuthorities().get(0).equals(Role.USER)) {
+                    model.addAttribute("roleU", "true");
+                }
+                if (u.getAuthorities().get(0).equals(Role.ADMIN)) {
+                    model.addAttribute("roleA", "true");
+                }
+                if (u.isAccountNonExpired()) {
+                    model.addAttribute("accountNonExpired", "true");
+                }
+                if (u.isAccountNonLocked()) {
+                    model.addAttribute("accountNonLocked", "true");
+                }
+                if (u.isCredentialsNonExpired()) {
+                    model.addAttribute("credentialsNonExpired", "true");
+                }
+                if (u.isEnabled()) {
+                    model.addAttribute("enabled", "true");
+                }
+            }
+        }
+        return "editUser";
+    }
+
+    @RequestMapping("/addUser")
+    public String addNewUser(@Valid @ModelAttribute User user,
+            BindingResult result, Model model,
+            @RequestParam(value = "save", required = false) String save,
+            @RequestParam(value = "edit", required = false) String edit) {
+
+        model.addAttribute("username", "false");
+        model.addAttribute("password", "false");
+        model.addAttribute("name", "false");
+        model.addAttribute("email", "false");
+
+        if (edit != null && !edit.equals("") && user != null) {
+            Optional<User> userDB = userService.findUser(edit);
+            if (userDB.isPresent()) {
+                User u = userDB.get();
+                UserToMap mapUpU = new UserToMap(u, user);
+                Map<String, Object> userMap = mapUpU.getMapUser();
+                if (userService.updateUser(edit, userMap)) {
+                    return "redirect:/Users";
+                } else {
+                    List<String> error = new ArrayList();
+                    error.add("Ошибка Обновления записи в БД!");
+                    model.addAttribute("heder", "Ошибка обновления пользователя");
+                    model.addAttribute("isError", "true");
+                    model.addAttribute("errors", error);
+                    return "pageError";
+                }
+            } else {
+                List<String> error = new ArrayList();
+                error.add("Обновляемый пользователь не найден!");
+                model.addAttribute("heder", "Ошибка обновления пользователя");
+                model.addAttribute("isError", "true");
+                model.addAttribute("errors", error);
+                return "pageError";
+            }
+        } 
+
         if (save != null && !result.hasErrors()) {
             if (!userService.findUser(user.getUsername()).isPresent()) {
                 userService.saveUser(user);

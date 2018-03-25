@@ -1,6 +1,7 @@
 package ru.ivan.springsecurity.services;
 
 import java.util.List;
+import java.util.Map;
 import ru.ivan.springsecurity.domain.User;
 import ru.ivan.springsecurity.persistence.UserDao;
 import lombok.NonNull;
@@ -38,5 +39,8 @@ public class UserService implements UserDetailsService {
     }
     public User deleteUser (String username) {
         return (User) userDao.deletUser(username);
+    }
+    public boolean updateUser (String username, Map <String, Object> newUserUpdate) {
+        return userDao.updateUser(username, newUserUpdate);
     }
 }

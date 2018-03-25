@@ -2,7 +2,9 @@ package ru.ivan.springsecurity.persistence;
 
 import com.google.common.collect.ImmutableList;
 import com.mongodb.DBObject;
+import com.mongodb.WriteResult;
 import java.util.List;
+import java.util.Map;
 import ru.ivan.springsecurity.domain.User;
 import ru.ivan.springsecurity.domain.UserField;
 import lombok.NonNull;
@@ -12,6 +14,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -19,6 +23,7 @@ import org.springframework.data.mongodb.core.query.Update;
 
 @Component
 public class UserDao {
+    private final Logger logger = LoggerFactory.getLogger(UserDao.class);
     @Autowired
     private MongoTemplate mongoTemplate;
 
@@ -42,11 +47,18 @@ public class UserDao {
         return Optional.ofNullable(ImmutableList.copyOf(mongoTemplate.findAll(User.class)));
     }
     
-    public User deletUser (String username) {
+    public User deletUser (@NonNull String username) {
         return (User) mongoTemplate.findAndRemove(query (where(UserField.USER_NAME.field()).is(username)), User.class);
     }
-    //public void updateUser (@NonNull User user) {
-    //    Update update = Update.fromDBObject((DBObject) user, (String) null);
-    //    mongoTemplate.updateFirst(query (where(UserField.USER_NAME.field()).is(user.getUsername())), update, User.class);
-   // }
+    public boolean updateUser (@NonNull String userName, @NonNull Map <String, Object> newUserUpdate) {
+        Update update = new Update();
+        for (String str : newUserUpdate.keySet()) {
+            update.set(str, newUserUpdate.get(str));
+        }
+        WriteResult result = mongoTemplate.updateFirst(query (where(UserField.USER_NAME.field()).is(userName)), update, User.class);
+        if (result.getN()!=0 && result.isUpdateOfExisting())
+            return true;
+        else
+            return false;
+    }
 }
