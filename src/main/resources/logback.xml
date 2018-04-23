@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="DEV_HOME" value="C:/temp/TempStudioProjects/Logs" />
+    <property name="DEV_HOME" value="/home/ivan/NetBeansProjects/temp/TempStudioProjects/Logs" />
     <appender name="FILE-AUDIT"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${DEV_HOME}/debug.log</file>

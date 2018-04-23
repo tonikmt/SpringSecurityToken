@@ -1,6 +1,7 @@
 package ru.ivan.springsecurity.domain;
 
 import com.google.common.collect.ImmutableList;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,23 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Document(collection = "users")
 public class User implements UserDetails {
 
+    public User(String username, String role, String password, LocalDate dateExpiredAccount, LocalDate passwordExpirationTime, String name, String email) {
+        this.username = username;
+        this.authorities = ImmutableList.of(Role.valueOf((role)));
+        this.password = new BCryptPasswordEncoder().encode(password);
+        this.dateCreateAccount = LocalDate.now();
+        this.dateExpiredAccount = dateExpiredAccount;
+        this.dateOfPasswordChange = LocalDate.now();
+        this.passwordExpirationTime = passwordExpirationTime;
+        this.accountNonExpired = this.dateCreateAccount.isBefore(this.dateExpiredAccount);
+        this.accountNonLocked = true;
+        this.credentialsNonExpired = this.dateOfPasswordChange.isBefore(this.passwordExpirationTime);
+        this.enabled = true;
+        this.name = name;
+        this.email = email;
+    }
+    
+
     private static final long serialVersionUID = -6319038172906820788L;
     @Id
     private ObjectId id;
@@ -38,11 +56,17 @@ public class User implements UserDetails {
     
     @NotBlank (message = "Поле Password не заполненно!")
     private String password;
+    
+    private LocalDate dateCreateAccount;
+    private LocalDate dateExpiredAccount;
+    
+    private LocalDate dateOfPasswordChange;
+    private LocalDate passwordExpirationTime;
         
-    private boolean accountNonExpired;
-    private boolean accountNonLocked;
-    private boolean credentialsNonExpired;
-    private boolean enabled;
+    private boolean accountNonExpired; // Указывает, истек ли срок действия учетной записи пользователя.
+    private boolean accountNonLocked; // Указывает, заблокирован или разблокирован пользователь.
+    private boolean credentialsNonExpired; //Указывает, истек ли у пользователя учетные данные (пароль).
+    private boolean enabled; // Указывает, включен или отключен пользователь.
     
     @NotBlank (message = "Поле name не заполненно!")
     @Size (min = 1, max = 32, message = "Имя должно быть от 1 до 32 символов!")
