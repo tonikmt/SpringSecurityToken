@@ -4,6 +4,7 @@ import ru.ivan.springsecurity.utils.UserToMap;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -64,6 +65,18 @@ public class MainController {
         //if (logout != null) {
         //    response.addCookie(new Cookie("X-Auth-Token", ""));
         //}
+        /*userService.saveUser(User.builder()
+                .username("qwe")
+                .authorities(ImmutableList.of(Role.ADMIN))
+                .password(new BCryptPasswordEncoder().encode("qwe"))
+                .name("qwe")
+                .email("qwe@qwe.ru")
+                .accountNonExpired(true)
+                .accountNonLocked(true)
+                .credentialsNonExpired(true)
+                .enabled(true)
+                .build());*/
+        
         model.addAttribute("error", error != null);
         model.addAttribute("logout", logout != null);
         return "login";
@@ -147,7 +160,24 @@ public class MainController {
     @RequestMapping("/Users")
     public String allUsers(Model model) {
         Optional<List<User>> users = userService.getAllUsers();
-        model.addAttribute("users", users.get());
+        if (users.isPresent())
+            model.addAttribute("users", users.get());
+        else {
+            List <User> user = new LinkedList <>();
+            user.add(User.builder()
+                .username("not found")
+                .authorities(ImmutableList.of(Role.USER))
+                .password(new BCryptPasswordEncoder().encode("not found"))
+                .name("not found")
+                .email("not found")
+                .accountNonExpired(false)
+                .accountNonLocked(false)
+                .credentialsNonExpired(false)
+                .enabled(false)
+                .build());
+            
+            model.addAttribute("users", user);
+        }
         return "Users";
     }
 
@@ -273,20 +303,7 @@ public class MainController {
             return "addUser";
         }
 
-        //userService.saveUser(user);
-
-        /*userService.saveUser(User.builder()
-                .username(request.getParameter("username"))
-                .authorities(ImmutableList.of(Role.valueOf(request.getParameter("role"))))
-                //.authorities(ImmutableList.of(request.getParameter("role").equals("ADMIN")? Role.ADMIN : Role.USER))
-                .password(new BCryptPasswordEncoder().encode(request.getParameter("password")))
-                .name(request.getParameter("name"))
-                .email(request.getParameter("email"))
-                .accountNonExpired(true)
-                .accountNonLocked(true)
-                .credentialsNonExpired(true)
-                .enabled(true)
-                .build());*/
+        
         return "addUser";
     }
 
